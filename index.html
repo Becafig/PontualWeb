@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pontual Web - Internet Fibra Óptica de Alta Velocidade</title>
+    <meta name="description" content="Pontual Web: Internet rápida e estável para sua casa ou empresa. Conectando você ao mundo com qualidade e pontualidade desde 2014.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cor-azul-escuro: #0A192F;
+            --cor-azul-naval: #112240;
+            --cor-cinza-claro: #CCD6F6;
+            --cor-branco-titulos: #E6F1FF;
+            --cor-verde-contraste: #64FFDA;
+            --cor-verde-transparente: rgba(100, 255, 218, 0.1);
+            --font-principal: 'Poppins', sans-serif;
+            --transicao-padrao: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--cor-azul-escuro);
+        }
+        body {
+            font-family: var(--font-principal);
+            color: var(--cor-cinza-claro);
+            background-color: var(--cor-azul-escuro);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        canvas#background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+        section {
+            padding: 120px 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--cor-branco-titulos);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::before {
+            content: '0' counter(section) '.';
+            counter-increment: section;
+            margin-right: 10px;
+            color: var(--cor-verde-contraste);
+            font-weight: 400;
+            font-size: 1.5rem;
+        }
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--cor-verde-contraste);
+            margin-bottom: 40px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border: 1px solid var(--cor-verde-contraste);
+            border-radius: 4px;
+            color: var(--cor-verde-contraste);
+            background-color: transparent;
+            font-family: var(--font-principal);
+            font-size: 1rem;
+            text-decoration: none;
+            transition: var(--transicao-padrao);
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: var(--cor-verde-transparente);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -10px var(--cor-azul-naval);
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 20px 0;
+            background-color: rgba(10, 25, 47, 0.85);
+            backdrop-filter: blur(10px);
+            transition: top 0.3s;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--cor-branco-titulos);
+            text-decoration: none;
+        }
+        .logo span {
+            color: var(--cor-verde-contraste);
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+        .nav-links li {
+            margin-left: 30px;
+            counter-increment: nav-item;
+        }
+        .nav-links a {
+            color: var(--cor-cinza-claro);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transicao-padrao);
+            padding: 5px 0;
+        }
+        .nav-links a::before {
+            content: '0' counter(nav-item) '.';
+            margin-right: 5px;
+            color: var(--cor-verde-contraste);
+        }
+        .nav-links a:hover {
+            color: var(--cor-verde-contraste);
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 101;
+        }
+        .menu-toggle .bar {
+            width: 25px;
+            height: 2px;
+            background-color: var(--cor-verde-contraste);
+            margin: 4px 0;
+            transition: 0.4s;
+        }
+        #hero {
+            padding-top: 150px;
+        }
+        #hero .container {
+            max-width: 900px;
+        }
+        #hero .subtitle {
+            color: var(--cor-verde-contraste);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.5s ease-out;
+        }
+        #hero h1 {
+            font-size: clamp(40px, 8vw, 70px);
+            font-weight: 700;
+            color: var(--cor-branco-titulos);
+            line-height: 1.1;
+            margin-bottom: 10px;
+            animation: fadeIn 0.5s ease-out 0.2s backwards;
+        }
+        #hero h2 {
+            font-size: clamp(30px, 7vw, 60px);
+            font-weight: 700;
+            color: var(--cor-cinza-claro);
+            opacity: 0.8;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-out 0.4s backwards;
+        }
+        #hero p {
+            max-width: 550px;
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.5s ease-out 0.6s backwards;
+        }
+        #hero .btn {
+            animation: fadeInUp 0.5s ease-out 0.8s backwards;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .plan-card {
+            background-color: var(--cor-azul-naval);
+            padding: 30px;
+            border-radius: 5px;
+            transition: var(--transicao-padrao);
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px -15px rgba(2,12,27,0.7);
+        }
+        .plan-card .plan-icon {
+            font-size: 2.5rem;
+            color: var(--cor-verde-contraste);
+            margin-bottom: 20px;
+        }
+        .plan-card h3 {
+            color: var(--cor-branco-titulos);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .plan-card .speed {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--cor-verde-contraste);
+        }
+        .plan-card .speed span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--cor-cinza-claro);
+        }
+        .plan-card .price {
+            font-size: 1.2rem;
+            color: var(--cor-branco-titulos);
+            margin: 15px 0;
+        }
+        .plan-card .price span {
+            font-size: 0.9rem;
+            color: var(--cor-cinza-claro);
+        }
+        .plan-card .btn {
+            margin-top: auto;
+            text-align: center;
+        }
+        #benefits .benefits-content {
+           max-width: 700px;
+           margin: 0 auto;
+        }
+        #benefits .benefits-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        #benefits .benefits-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        #benefits .benefits-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--cor-verde-contraste);
+            font-weight: 700;
+        }
+        .testimonial-card {
+            background-color: var(--cor-azul-naval);
+            padding: 30px;
+            border-radius: 5px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .testimonial-card::before {
+            content: '“';
+            position: absolute;
+            top: -20px;
+            left: 5px;
+            font-size: 5rem;
+            color: var(--cor-verde-contraste);
+            opacity: 0.3;
+        }
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            margin-top: auto;
+        }
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--cor-verde-contraste);
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        .testimonial-author .author-name {
+            font-weight: 600;
+            color: var(--cor-branco-titulos);
+        }
+        .testimonial-author span {
+            display: block;
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: var(--cor-cinza-claro);
+        }
+        #about .about-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        #about p {
+            margin-bottom: 15px;
+        }
+        #contact .container {
+            text-align: center;
+            max-width: 600px;
+        }
+        #contact p {
+            margin-bottom: 40px;
+        }
+        .contact-form {
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--cor-azul-naval);
+            border: 1px solid var(--cor-cinza-claro);
+            border-radius: 4px;
+            color: var(--cor-branco-titulos);
+            font-family: var(--font-principal);
+            font-size: 1rem;
+            transition: var(--transicao-padrao);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--cor-verde-contraste);
+            box-shadow: 0 0 0 2px var(--cor-verde-transparente);
+        }
+        #gemini-feature textarea {
+            min-height: 120px;
+            resize: vertical;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--cor-azul-naval);
+            border: 1px solid var(--cor-cinza-claro);
+            border-radius: 4px;
+            color: var(--cor-branco-titulos);
+            font-family: var(--font-principal);
+            font-size: 1rem;
+            transition: var(--transicao-padrao);
+            margin-bottom: 20px;
+        }
+        #gemini-feature textarea:focus {
+             outline: none;
+            border-color: var(--cor-verde-contraste);
+            box-shadow: 0 0 0 2px var(--cor-verde-transparente);
+        }
+        .contact-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .contact-form .btn {
+            width: 100%;
+            font-size: 1.2rem;
+        }
+        #gemini-feature .container {
+            max-width: 700px;
+            text-align: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(10, 25, 47, 0.9);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: var(--cor-azul-naval);
+            margin: auto;
+            padding: 40px;
+            border: 1px solid var(--cor-verde-contraste);
+            border-radius: 5px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            animation: zoomIn 0.3s ease-out;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .close-button {
+            color: var(--cor-cinza-claro);
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            transition: var(--transicao-padrao);
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--cor-verde-contraste);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #recommendation-result h3 {
+            color: var(--cor-verde-contraste);
+            margin-bottom: 15px;
+        }
+        .loader {
+            border: 4px solid var(--cor-azul-naval);
+            border-left-color: var(--cor-verde-contraste);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .chatbot-toggle-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--cor-verde-contraste);
+            color: var(--cor-azul-escuro);
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(100, 255, 218, 0.4);
+            z-index: 998;
+            transition: transform 0.3s ease;
+        }
+        .chatbot-toggle-btn:hover {
+            transform: scale(1.1);
+        }
+        .chatbot-toggle-btn svg {
+            width: 32px;
+            height: 32px;
+            transition: opacity 0.3s ease;
+        }
+        .chatbot-toggle-btn .icon-close {
+            display: none;
+        }
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 350px;
+            max-width: 90vw;
+            background-color: var(--cor-azul-escuro);
+            border-radius: 15px;
+            box-shadow: 0 5px 40px rgba(0,0,0,0.4);
+            overflow: hidden;
+            z-index: 999;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+        }
+        .chat-window.open {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        .chat-header {
+            background-color: var(--cor-azul-naval);
+            padding: 15px;
+            color: var(--cor-branco-titulos);
+            font-weight: 600;
+            text-align: center;
+        }
+        .chat-body {
+            padding: 20px;
+        }
+        .chat-message {
+            margin-bottom: 15px;
+        }
+        .chat-message p {
+            background-color: var(--cor-azul-naval);
+            padding: 12px 15px;
+            border-radius: 10px;
+            display: inline-block;
+            max-width: 100%;
+            font-size: 0.95rem;
+        }
+        .chat-options {
+            padding: 0 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-option-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: transparent;
+            border: 1px solid var(--cor-verde-contraste);
+            color: var(--cor-verde-contraste);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transicao-padrao);
+        }
+        .chat-option-btn:hover {
+            background-color: var(--cor-verde-transparente);
+        }
+        .footer {
+            padding: 25px 0;
+            text-align: center;
+        }
+        .footer p {
+            color: var(--cor-cinza-claro);
+            font-size: 0.9rem;
+        }
+        .footer a {
+            color: var(--cor-verde-contraste);
+            text-decoration: none;
+        }
+
+        .port {
+            text-decoration: none;
+            color: yellow;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            section {
+                padding: 100px 0;
+            }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--cor-azul-naval);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.5s ease-in-out;
+                box-shadow: -10px 0px 30px -15px #020c1b;
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .nav-links li {
+                margin: 20px 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .menu-toggle.active .bar:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            .menu-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .menu-toggle.active .bar:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="background-canvas"></canvas>
+
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#hero" class="logo">Pontual<span>Web</span></a>
+                <ul class="nav-links">
+                    <li><a href="#plans">Planos</a></li>
+                    <li><a href="#benefits">Benefícios</a>
+                    <li><a href="#gemini-feature">Plano Ideal</a></li>
+                    <li><a href="#about">Sobre Nós</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+                <div class="menu-toggle">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <section id="hero">
+            <div class="container">
+                <p class="subtitle">Bem-vindo à Pontual Web</p>
+                <h1>Conexão Rápida e Estável.</h1>
+                <h2>Sua porta de entrada para o mundo digital.</h2>
+                <p>
+                    Conectando você ao mundo com a velocidade da fibra óptica, estabilidade garantida e a confiança que só um provedor local comprometido desde 2014 pode oferecer.
+                </p>
+                <a href="#plans" class="btn">Conheça Nossos Planos</a>
+            </div>
+        </section>
+
+        <section id="plans">
+            <div class="container">
+                <h2 class="section-title">Nossos Planos</h2>
+                <p class="section-subtitle">Soluções perfeitas para sua casa ou empresa.</p>
+                <div class="plans-grid">
+                    <div class="plan-card">
+                        <div class="plan-icon">🎮</div>
+                        <h3>Plano Basic</h3>
+                        <div class="speed">50 <span>Mbps</span></div>
+                        <p class="price">R$ 79,90<span>/mês</span></p>
+                        <p>Ideal para jogos online, streaming em HD e uso diário com a família.</p>
+                        <a href="#contact" class="btn">Contratar Agora</a>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-icon">🎬</div>
+                        <h3>Plano Ultra</h3>
+                        <div class="speed">100 <span>Mbps</span></div>
+                        <p class="price">R$ 99,90<span>/mês</span></p>
+                        <p>Perfeito para streaming em 4K, múltiplos dispositivos e home office.</p>
+                        <a href="#contact" class="btn">Contratar Agora</a>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-icon">🚀</div>
+                        <h3>Plano Pro</h3>
+                        <div class="speed">200 <span>Mbps</span></div>
+                        <p class="price">R$ 129,90<span>/mês</span></p>
+                        <p>Velocidade máxima para downloads pesados, criadores de conteúdo e entusiastas.</p>
+                        <a href="#contact" class="btn">Contratar Agora</a>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-icon">🏢</div>
+                        <h3>Plano Empresarial</h3>
+                        <div class="speed">500+ <span>Mbps</span></div>
+                        <p class="price">Consulte<span></span></p>
+                        <p>Soluções corporativas com link dedicado, alta disponibilidade e segurança.</p>
+                        <a href="#contact" class="btn">Solicitar Orçamento</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="benefits">
+            <div class="container">
+                <div class="benefits-content">
+                    <h2 class="section-title">Por que Escolher a Pontual Web?</h2>
+                    <p class="section-subtitle">Nós vamos além da conexão.</p>
+                    <p>Somos um provedor local comprometido com a qualidade do serviço e a satisfação dos nossos clientes. Para nós, cada conexão importa.</p>
+                    <ul class="benefits-list">
+                        <li>Estabilidade de conexão garantida em contrato.</li>
+                        <li>Atendimento humanizado e personalizado.</li>
+                        <li>Suporte técnico local, ágil e eficiente.</li>
+                        <li>Preços competitivos e planos sem surpresas.</li>
+                        <li>Tecnologia 100% fibra óptica até sua casa (FTTH).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="gemini-feature">
+            <div class="container">
+                <h2 class="section-title">✨ Descubra Seu Plano Ideal</h2>
+                <p class="section-subtitle">Deixe nossa IA encontrar a conexão perfeita para você.</p>
+                <p>Descreva como você e sua família usam a internet. Você joga online? Trabalha de casa? Assiste a muitos filmes e séries? Quantas pessoas usam a rede ao mesmo tempo? Quanto mais detalhes, melhor a recomendação!</p>
+                <textarea id="usage-description" placeholder="Ex: Somos 4 pessoas em casa. Eu trabalho de casa e faço muitas videochamadas. Meus filhos jogam online e assistem Netflix em 4K. Usamos a internet o dia todo em vários celulares e TVs..."></textarea>
+                <button id="get-recommendation-btn" class="btn">Obter Recomendação</button>
+            </div>
+        </section>
+
+        <section id="testimonials">
+            <div class="container">
+                <h2 class="section-title">O que Nossos Clientes Dizem</h2>
+                <p class="section-subtitle">A confiança que nos move.</p>
+                <div class="plans-grid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Mudei para a Pontual Web e a diferença foi incrível. A internet não cai e o ping nos jogos é muito baixo. O suporte técnico resolveu minha única dúvida em minutos."</p>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=250&h=250&auto=format&fit=crop" alt="Foto ilustrativa de Carlos Silva">
+                            <div class="author-info">
+                                <div class="author-name">Carlos Silva</div>
+                                <span>Gamer e Desenvolvedor</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Trabalho em home office e preciso de uma conexão 100% estável para minhas videochamadas. A Pontual Web entrega exatamente o que promete. Recomendo de olhos fechados!"</p>
+                        <div class="testimonial-author">
+                             <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=250&h=250&auto=format&fit=crop" alt="Foto ilustrativa de Juliana Martins">
+                            <div class="author-info">
+                                <div class="author-name">Juliana Martins</div>
+                                <span>Consultora de Marketing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="about-content">
+                    <h2 class="section-title">Conectando Histórias Desde 2014</h2>
+                    <p class="section-subtitle">Mais de uma década de experiência e paixão.</p>
+                    <p>Fundada em 05 de junho de 2014, a <strong>Pontual Web Provedor de Acesso A Internet LTDA</strong> nasceu com o objetivo de oferecer serviços de internet de alta qualidade para a região do Rio de Janeiro, com foco especial em Cascadura e arredores.</p>
+                    <p>Como uma empresa que cresceu com a comunidade, entendemos as suas necessidades. Investimos constantemente em infraestrutura de ponta e em um atendimento próximo para garantir não apenas a sua conexão, mas a sua total satisfação.</p>
+                    <p><strong>CNPJ:</strong> 20.393.116/0001-45</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">Entre em Contato</h2>
+                <p class="section-subtitle">Estamos prontos para atender você!</p>
+                <p>Preencha o formulário abaixo ou utilize nossos canais de atendimento. Nossa equipe retornará o mais breve possível.</p>
+                <form action="#" class="contact-form" onsubmit="alert('Mensagem enviada com sucesso! (Demonstração)'); return false;">
+                    <div class="form-group">
+                        <input type="text" name="name" id="name" placeholder="Seu Nome" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" id="email" placeholder="Seu E-mail" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" id="message" placeholder="Sua Mensagem" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Enviar Mensagem</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>
+                © 2025 Pontual Web. Todos os direitos reservados. Feito por <a class="port" href="https://becafig.github.io/portfolio/">Lucas Figueiredo</a>
+            </p>
+        </div>
+    </footer>
+
+    <div id="recommendation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div id="recommendation-result">
+            </div>
+        </div>
+    </div>
+
+    <div class="chatbot-container">
+        <div id="chat-window" class="chat-window">
+            <div class="chat-header">
+                <p>Assistente Virtual Pontual Web</p>
+            </div>
+            <div class="chat-body">
+                <div class="chat-message assistant">
+                    <p>Olá! Sou seu assistente virtual. Como posso ajudar hoje?</p>
+                </div>
+            </div>
+            <div class="chat-options">
+                <button class="chat-option-btn" data-option="Suporte Técnico">Suporte Técnico</button>
+                <button class="chat-option-btn" data-option="Atendimento">Atendimento</button>
+                <button class="chat-option-btn" data-option="Financeiro">Financeiro</button>
+            </div>
+        </div>
+        <button id="chatbot-toggle" class="chatbot-toggle-btn">
+            <svg class="icon-chat" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32px" height="32px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path></svg>
+            <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32px" height="32px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('background-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+            const particleCount = window.innerWidth < 768 ? 40 : 100;
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 1.5 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = 'rgba(100, 255, 218, 0.7)';
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.size > 0.1) this.size -= 0.01;
+                    if (this.size <= 0.1 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.size = Math.random() * 1.5 + 1;
+                        this.speedX = Math.random() * 1 - 0.5;
+                        this.speedY = Math.random() * 1 - 0.5;
+                    }
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            initParticles();
+            animateParticles();
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            });
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+            const sections = document.querySelectorAll('section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            let lastScrollTop = 0;
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    header.style.top = '-100px';
+                } else {
+                    header.style.top = '0';
+                }
+                lastScrollTop = scrollTop;
+            });
+            const getRecommendationBtn = document.getElementById('get-recommendation-btn');
+            const modal = document.getElementById('recommendation-modal');
+            const modalResult = document.getElementById('recommendation-result');
+            const closeModalBtn = document.querySelector('.close-button');
+            getRecommendationBtn.addEventListener('click', handlePlanRecommendation);
+            closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+            window.addEventListener('click', (event) => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            async function handlePlanRecommendation() {
+                const usageDescription = document.getElementById('usage-description').value;
+                if (usageDescription.trim() === '') {
+                    alert('Por favor, descreva seu uso da internet para obter uma recomendação.');
+                    return;
+                }
+                modalResult.innerHTML = '<div class="loader"></div><p>Analisando suas necessidades...</p>';
+                modal.style.display = 'flex';
+                const apiKey = "AIzaSyCJlTL_1VjDvnKrL7Opj_yCw2YdXBv3CzQ";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const prompt = `
+                    Você é um assistente especialista da Pontual Web, um provedor de internet.
+                    Sua tarefa é analisar a descrição de uso de um cliente e recomendar o melhor plano de internet.
+                    Seja amigável, direto e use o nome do plano recomendado em negrito.
+                    Justifique a recomendação de forma breve e clara.
+                    Finalize com um call-to-action para o cliente entrar em contato ou contratar.
+
+                    Os planos disponíveis são:
+                    - Plano Basic: 50 Mbps. Ideal para jogos online, streaming em HD e uso diário.
+                    - Plano Ultra: 100 Mbps. Perfeito para streaming em 4K, múltiplos dispositivos e home office.
+                    - Plano Pro: 200 Mbps. Velocidade máxima para downloads pesados, criadores de conteúdo e entusiastas.
+                    - Plano Empresarial: 500+ Mbps. Soluções corporativas com link dedicado.
+
+                    Descrição do cliente: "${usageDescription}"
+
+                    Analise a descrição e forneça sua recomendação.
+                `;
+                const payload = {
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                };
+                try {
+                    let response;
+                    let retries = 3;
+                    let delay = 1000;
+                    for (let i = 0; i < retries; i++) {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) break;
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2;
+                    }
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.statusText}`);
+                    }
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const recommendationText = result.candidates[0].content.parts[0].text;
+                        const formattedText = recommendationText
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\n/g, '<br>'); 
+                        modalResult.innerHTML = `<h3>✨ Plano Recomendado para Você</h3><p>${formattedText}</p><br><a href="#contact" class="btn" onclick="document.getElementById('recommendation-modal').style.display='none'">Fale Conosco</a>`;
+                    } else {
+                        throw new Error("Resposta da API inválida ou vazia.");
+                    }
+                } catch (error) {
+                    console.error("Erro ao chamar a API Gemini:", error);
+                    modalResult.innerHTML = '<h3>Ocorreu um Erro</h3><p>Não foi possível obter uma recomendação no momento. Por favor, tente novamente mais tarde ou entre em contato conosco diretamente.</p>';
+                }
+            }
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatWindow = document.getElementById('chat-window');
+            const chatOptionBtns = document.querySelectorAll('.chat-option-btn');
+            const iconChat = chatbotToggle.querySelector('.icon-chat');
+            const iconClose = chatbotToggle.querySelector('.icon-close');
+            chatbotToggle.addEventListener('click', () => {
+                chatWindow.classList.toggle('open');
+                if (chatWindow.classList.contains('open')) {
+                    iconChat.style.display = 'none';
+                    iconClose.style.display = 'block';
+                } else {
+                    iconChat.style.display = 'block';
+                    iconClose.style.display = 'none';
+                }
+            });
+            chatOptionBtns.forEach(button => {
+                button.addEventListener('click', () => {
+                    const option = button.dataset.option;
+                    const phoneNumber = '2125201856';
+                    const message = encodeURIComponent(`Olá, gostaria de falar com o setor ${option}.`);
+                    const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+                    window.open(whatsappUrl, '_blank');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
